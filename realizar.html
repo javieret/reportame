@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<link rel="stylesheet" type="text/css" href="css/realizar.css" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="cordova-2.0.0.js"></script>
+    <style type="text/css">
+   .grid {
+	  width: auto;
+	  margin: auto;
+	  background-image:url('img/page-background.png');
+	}
+    </style>
+    <script>
+    var pictureSource; 
+    var destinationType;
+    var lat;
+    var lng;
+    var imagen;
+    
+    function initialize() {
+    	navigator.geolocation.getCurrentPosition(onSuccess, onError);
+      }
+    
+    function onError(error) {
+        alert('code: '    + error.code    + '\n' +
+              'message: ' + error.message + '\n');
+    }
+    
+    function onSuccess(position) {
+    	lat=position.coords.latitude;
+    	lng=position.coords.longitude;
+    }
+  
+    function capturePhoto() {
+        navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 100,targetWidth: 100,
+        	  targetHeight: 100, encodingType: Camera.EncodingType.PNG,destinationType: navigator.camera.DestinationType.DATA_URL});
+      }
+    
+    function onPhotoDataSuccess(imageData) {
+    	imagen=imageData
+    	var smallImage = document.getElementById('smallImage');
+        smallImage.style.display = 'block';
+        smallImage.src = "data:image/PNG;base64," + imageData;
+        
+   	 	/*var prmstr = window.location.search.substr(1);
+        var prmarr = prmstr.split ("&");
+        var params = {};
+
+        for ( var i = 0; i < prmarr.length; i++) {
+            var tmparr = prmarr[i].split("=");
+
+        }
+        lat=prmarr[0].substr(4);
+        lng=prmarr[1].substr(4);*/
+      }
+    function onFail(message) {
+        alert('Failed because: ' + message);
+     }
+   
+    function mandarReporte(){
+    	location.href = 'reporte.html';
+    }
+    function mandarTop(){
+    	location.href = 'top.html';
+    }
+    
+    function mandarHome(){
+    	location.href = 'home.html';
+    }
+    
+    function subirReporte(){
+    	var desc = document.getElementById('texta').value
+    	var e = document.getElementById("select");
+    	var tipo = e.options[e.selectedIndex].value;
+        $.post("http://www.ellaquiereconmigo.com/reportame/upload.php", { image: imagen, lat:lat, lng:lng, desc:desc,tipo:tipo},
+  		 		function(data) {
+        		alert("Tu Reporte Ha Sido Dado De Alta");
+				location.reload();
+   		});
+    }
+
+    </script>
+  </head>
+  <body onload="initialize()";>
+  <div id="header"><img id="logopeq" src="img/logopeq.png"><span>Reporta.me</span></div>
+  <div id="contenedor">
+  
+   <div id="login">
+	  <br>
+	  	<label>Tipo De Reporte:</label>
+	  	<select id="select">
+	  		<option value="1">Vialidad</option>
+	  		<option value="2">Inseguridad</option>
+	  		<option value="3">Servicios Públicos</option>
+	  	</select>
+	  	<br>
+	  	<br>
+	  	<textarea id="texta" rows="3" cols="31" placeholder="Datos Del Reporte" ></textarea>
+	  	<br>
+	  	<br>
+	  	<input type="submit" id="foto" value="Tomar Foto" onclick="capturePhoto();">
+		<br>
+		<br>
+	  	<input type="submit" id="btn_enviar" value="Enviar Reporte" onclick="subirReporte();">
+	  	<img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
+	  </div>
+  </div>
+  
+    <div class="grid">
+	  <div class="grid-m1"></div>
+	  <div class="grid-c1">
+	     <img src="img/ic_menu_favorite.png" onclick="mandarTop();"></img>
+	  </div>
+	  <div class="grid-m2"></div>
+	  <div class="grid-c2">
+	    <img src="img/ic_menu_agenda.png"></img>
+	  </div>
+	  <div class="grid-m3"></div>
+	  <div class="grid-c3">
+	   	<img src="img/flag.png" onclick="mandarReporte();"></img>
+	  </div>
+	  <div class="grid-m4"></div>
+	  <div class="grid-c4">
+	   	<img src="img/ic_menu_archive.png" onclick="mandarHome();"></img>
+	  </div>
+	  <br style="clear:both" />
+	</div>
+	
+  </body>
+</html>

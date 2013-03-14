@@ -1,0 +1,34 @@
+
+      html { height: 100% }
+      body { 
+      height: 100%; 
+      margin:0;
+      padding: 0;
+      background-image:url('pattern.jpg');
+  	  background-repeat:repeat;
+      }
+      #map_canvas { 
+      height: 100% 
+      }
+	img{
+	position:relative;
+	top:6px;
+	}
+	#header{
+	font-size:20px;
+	padding:8px;
+	color:white;
+	background:#333;
+	}
+	
+	#logopeq{
+	width:100px;
+	height:31px;
+	}
+	span{
+	position:relative;
+	left:9px;
+	}
+	h3{
+	margin-bottom:0px
+	}
